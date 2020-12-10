@@ -1,0 +1,70 @@
+---
+title: "Project Starter Scrape Code"
+output: html_notebook
+---
+
+#### Load Packages
+
+```{r}
+library(rvest)
+library(tidyverse)
+library(genius)
+```
+
+#### Scrape and create table of records from 1980s
+```{r}
+# read webpage for Grammy Awards
+webpage <- read_html("https://en.wikipedia.org/wiki/Grammy_Award_for_Record_of_the_Year")
+
+# copy xpath for table of 1980s
+XPATH80 <- '/html/body/div[3]/div[3]/div[5]/div[1]/table[5]'
+
+# run the following to create table of songs from 1980s
+table_1980 <- 
+  webpage %>%
+  html_nodes(xpath = XPATH80) %>%
+  html_table(fill = TRUE)
+
+d1980 <- table_1980[[1]]
+```
+
+#### Header that illustrates what how table should like like after scraping - should have 60 obs and 4 variables
+
+```{r}
+head(d1980)
+```
+
+Result should be a table of the Records from the 1980s with four columns representing those found on the webpage. To create tables for three remainging decades, go back to wiki page and get XPATH for table of 1990s, paste into XPATH80 (remember to change XPATH name!) AND edit the information accordingly for remainder of code - i.e. rename table_1980 and d1980.
+
+Repeat above for 2000s and 2010s.  NOTE: after copying XPATH for 1990, take a moment to
+compare that path to the one used for 1980s.  You should notice only one change.  Think how
+that change would carry over to the remaining two decades.  If you recognize it, then
+you can just copy the XPATH you used for 1990 and edit it accordingly for 2000s and 2010s.
+
+Once you have all the tables you will need to edit and clean them - remove the NAs, remove the [I] from Year, change Record to track and Artist(s) to artis, and remove the bracketed numbers from each year value.
+Lastly, you will want to just keep the variables year, track and artist and in this order.
+You can do this for each table individuallly or do as you combine all the tables together.  
+With the data properly cleaned you can add the lyrics using the genius package.  
+Below is is sample code and output for how the lyrics would be added to the data for just the 1980s after
+creating a data frame ROY80s.
+
+After cleaning the decade for 1980s the data frame should have 50 obs and 3 variables.  This is the ROY80s referenced below and sample of what that data should look like
+
+```{r}
+head(ROY80s)
+```
+
+
+Add lyrics to 1980s Records of the Year - This can take a minute of two and you may get warning message.  If you get warning check to see if data frame appears in list with other data frames.  If it does you are fine. The table of lyrics for just the 1980s - 2184 obs and 6 variables
+
+```{r}
+# get lyrics for songs 1980s
+lyrics80s <- ROY80s %>%
+  add_genius(artist, track, type = "lyrics")
+```
+
+#### What a table for a decade (1980s) should look like - again, 2184 obs and 6 variables
+
+```{r}
+head(lyrics80s)
+```

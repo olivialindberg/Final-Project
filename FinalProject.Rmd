@@ -1,0 +1,41 @@
+---
+title: "Final Project"
+author: "Liv Lindberg"
+due date: "12/14/2020"
+output: html_notebook
+---
+
+
+```{r}
+# load packages
+library(rvest)
+library(tidyverse)
+library(genius)
+library(tidytext)
+library(gridExtra)
+data("stop_words")
+data("sentiments")
+```
+
+```{r}
+# read webpage for Grammy Awards
+webpage <- read_html("https://en.wikipedia.org/wiki/Grammy_Award_for_Record_of_the_Year")
+
+# copy xpath for table of 1980s
+XPATH80 <- '/html/body/div[3]/div[3]/div[5]/div[1]/table[5]'
+
+# run the following to create table of songs from 1980s
+table_1980 <- 
+  webpage %>%
+  html_nodes(xpath = XPATH80) %>%
+  html_table(fill = TRUE)
+
+d1980 <- table_1980[[1]]
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
